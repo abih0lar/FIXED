@@ -51,7 +51,8 @@ yourself from a clone.
 
 ### Option A — fresh single-commit history (recommended)
 
-The repo has exactly one initial commit, so history preservation buys you
+`main`'s history is tiny (the initial commit plus the smoke-test commit —
+both trees contain the old secret via `app.py`), so preserving it buys you
 nothing. From a machine with the final, fixed working tree (after merging
 the fix branch — **use a squash merge** so the old history isn't grafted
 back in):

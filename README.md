@@ -107,9 +107,11 @@ secret-handling runbook.
 
 ## Tests
 
-The suite runs anywhere (Linux/macOS/Windows) — `tests/conftest.py` stubs the
-`MetaTrader5` SDK and feeds Scout/Risk fully synthetic, deterministic OHLCV
-data:
+Two complementary layers:
+
+**1. `pytest` — behavioural suite (runs anywhere, no broker needed).**
+`tests/conftest.py` stubs the `MetaTrader5` SDK and feeds Scout/Risk fully
+synthetic, deterministic OHLCV data:
 
 ```bash
 pip install -r requirements-dev.txt
@@ -121,6 +123,19 @@ sweeps, FVG detection & mitigation, order blocks, liquidity targets, the full
 `scan()` pipeline (LONG/SHORT/awaiting/denials), every major risk gate
 (daily loss, drawdown, kill switch, confidence, duplicates, spread, R:R,
 margin black hole, group cap), volatility-scaled sizing, and the SQLite layer.
+
+**2. `smoke_test.py` — zero-dependency import smoke test.**
+Stubs every third-party dep in-process and imports all 13 modules, catching
+import-time breakage (missing imports, NameErrors at class definition) even
+on a bare Python:
+
+```bash
+python smoke_test.py .   # from the repo root
+```
+
+The `import app` check needs a GUI-capable environment (Windows with
+`requirements.txt` installed, or Linux with PySide6 + libGL); all engine
+checks run anywhere.
 
 ## Security notes
 
