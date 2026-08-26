@@ -3,10 +3,12 @@
 ## What happened
 
 Commit `b10c58f` (the repo's initial commit) contained the license master
-secret hardcoded in `app.py`:
+secret hardcoded in `app.py` (referred to below as `<LEAKED_SECRET>` — the
+literal string is deliberately not reproduced in this file, so a history
+purge leaves zero occurrences in the tree):
 
 ```python
-_EMBEDDED_SECRET = "LORDfrank2020$"
+_EMBEDDED_SECRET = "<LEAKED_SECRET>"
 ```
 
 Anyone with repo access (or the distributed `ALADIN.exe`, which bundles the
@@ -36,7 +38,7 @@ Rotation, not history deletion, is what actually neutralizes a leaked secret.
 3. **Regenerate every client license** with `python keygen.py` and
    redistribute the new keys. Licenses made with the old secret will fail
    validation against the new one — coordinate the swap with clients.
-4. If `LORDfrank2020$` is used anywhere else (email, other accounts, other
+4. If `<LEAKED_SECRET>` is used anywhere else (email, other accounts, other
    bots), change it **there** too. Treat it as public from the moment it
    was committed.
 
@@ -74,7 +76,7 @@ unreachable and GitHub GC reclaims them).
 Requires [git-filter-repo](https://github.com/newren/git-filter-repo):
 
 ```bash
-echo 'LORDfrank2020$==>***REMOVED***' > replacements.txt
+echo 'PASTE_THE_OLD_SECRET_HERE==>***REMOVED***' > replacements.txt
 git filter-repo --replace-text replacements.txt \
                 --invert-paths --path build --path dist --force
 git push -f origin main

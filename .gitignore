@@ -18,9 +18,9 @@ CLIENT_LICENSE_KEY.txt
 build/
 dist/
 ALADIN.spec
-smoke_test.py
 
-# ── Local-only assets ────────────────────────────────────────────
+# ── Local-only dev scripts & assets ──────────────────────────────
+smoke_test.py
 logo.ico
 logo_emblem.png
 logo_header.png
