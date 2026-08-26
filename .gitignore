@@ -1,6 +1,26 @@
+# ── Python ────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+
+# ── Secrets & local runtime state (NEVER commit) ─────────────────
 .env
+data/
+db/
+CLIENT_LICENSE_KEY.txt
+*.key
+*.log
+
+# ── Build artifacts (regenerate with build.bat) ──────────────────
+build/
+dist/
+ALADIN.spec
+smoke_test.py
+
+# ── Local-only assets ────────────────────────────────────────────
 logo.ico
 logo_emblem.png
 logo_header.png
-smoke_test.py
-ALADIN.spec
