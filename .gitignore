@@ -19,8 +19,7 @@ build/
 dist/
 ALADIN.spec
 
-# ── Local-only dev scripts & assets ──────────────────────────────
-smoke_test.py
+# ── Local-only assets ────────────────────────────────────────────
 logo.ico
 logo_emblem.png
 logo_header.png
