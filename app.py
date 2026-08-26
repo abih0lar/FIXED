@@ -130,11 +130,13 @@ def _ensure_env():
             pass
 
 # ─────────────────────────────────────────────────────────────────────────────
-# LICENSE SECRET — embedded at BUILD TIME so the frozen exe can always
-# validate its license without a .env file next to it.
-# _ensure_secret() is called below; edit the value or delete .env to refresh.
+# LICENSE SECRET — resolved at runtime, injected at BUILD time.
+# Order: ALADIN_DRM_KEY from the environment/.env first (live editing), then
+# the _EMBEDDED_SECRET constant below, which stays EMPTY in source control.
+# inject_env.py --embed-drm-key fills it when dist\ALADIN.exe is built, so the
+# real key NEVER lives in this repository (or its git history).
 # ─────────────────────────────────────────────────────────────────────────────
-_EMBEDDED_SECRET = "LORDfrank2020$"
+_EMBEDDED_SECRET = ""  # set by `python inject_env.py --embed-drm-key` at build time
 _EMBEDDED_LICENSE = None  # optional: a pre-validated license baked into the exe
 
 _secret_ok = False
