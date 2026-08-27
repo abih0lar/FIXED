@@ -3,3 +3,13 @@ logo.ico
 logo_emblem.png
 logo_header.png
 ALADIN.spec
+
+# Build outputs — never commit (dist/ALADIN.exe is 77MB and contains the
+# bundled engine bytecode + any injected secrets; build/ is PyInstaller scratch)
+build/
+dist/
+
+# Runtime artifacts
+data/
+db/
+CLIENT_LICENSE_KEY.txt

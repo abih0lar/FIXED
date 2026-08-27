@@ -130,11 +130,13 @@ def _ensure_env():
             pass
 
 # ─────────────────────────────────────────────────────────────────────────────
-# LICENSE SECRET — embedded at BUILD TIME so the frozen exe can always
-# validate its license without a .env file next to it.
-# _ensure_secret() is called below; edit the value or delete .env to refresh.
+# LICENSE SECRET — injected at BUILD TIME by inject_env.py from the builder's
+# local data/.env (ALADIN_DRM_KEY). The repo/source only ever carries the
+# placeholder below; a real secret must never be committed. If the placeholder
+# survives into a build, license validation reports "DRM secret missing"
+# instead of silently validating against a public string.
 # ─────────────────────────────────────────────────────────────────────────────
-_EMBEDDED_SECRET = "LORDfrank2020$"
+_EMBEDDED_SECRET = "__ALADIN_DRM_KEY_PLACEHOLDER__"
 _EMBEDDED_LICENSE = None  # optional: a pre-validated license baked into the exe
 
 _secret_ok = False
@@ -439,7 +441,9 @@ def _network_utc_now():
     if _net_time_cache["val"] is not None and now - _net_time_cache["t"] < 300:
         return _net_time_cache["val"]
     try:
-        with urllib.request.urlopen("http://worldtimeapi.org/api/timezone/Etc/UTC", timeout=3) as r:
+        # FIX: HTTPS, not HTTP. Over plain HTTP a man-in-the-middle can serve a
+        # fake clock (e.g. year 2000) and make any expired license validate.
+        with urllib.request.urlopen("https://worldtimeapi.org/api/timezone/Etc/UTC", timeout=3) as r:
             data = json.loads(r.read().decode())
             val = datetime.fromisoformat(data["datetime"].replace("Z", "+00:00")).replace(tzinfo=None)
             _net_time_cache["t"] = now
