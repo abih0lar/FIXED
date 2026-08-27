@@ -60,6 +60,26 @@ pil = make_mod("PIL")
 pil.Image = make_mod("PIL.Image", {"open": lambda *a, **k: types.SimpleNamespace(resize=lambda *a, **k: types.SimpleNamespace()), "LANCZOS": 1})
 pil.ImageTk = make_mod("PIL.ImageTk", {"PhotoImage": lambda *a, **k: None})
 
+# PySide6 stub (GUI never shown at import time; only names must resolve)
+class _QtAttr:  # tolerant enum-ish: Qt.AlignCenter etc.
+    def __getattr__(self, name): return 0
+qt_core = make_mod("PySide6.QtCore", {
+    "Qt": _QtAttr(), "QTimer": type("QTimer", (), {"__init__": lambda s, *a, **k: None}),
+    "QSize": lambda *a, **k: None, "Signal": lambda *a, **k: None,
+})
+qt_gui = make_mod("PySide6.QtGui", {
+    n: type(n, (), {"__init__": lambda s, *a, **k: None})
+    for n in ("QIcon", "QPixmap", "QPainter", "QColor", "QFont", "QLinearGradient", "QBrush")
+})
+_qt_widgets = [n.strip() for n in (
+    "QApplication, QMainWindow, QWidget, QLabel, QFrame, QVBoxLayout, QHBoxLayout,"
+    "QGridLayout, QTabWidget, QPushButton, QLineEdit, QPlainTextEdit, QScrollArea,"
+    "QTableWidget, QTableWidgetItem, QHeaderView, QMessageBox, QFileDialog, QSizePolicy").split(",")]
+qt_widgets = make_mod("PySide6.QtWidgets", {
+    n: type(n, (), {"__init__": lambda s, *a, **k: None}) for n in _qt_widgets
+})
+make_mod("PySide6", {"QtCore": qt_core, "QtGui": qt_gui, "QtWidgets": qt_widgets})
+
 mt5 = make_mod("MetaTrader5", {
     "TIMEFRAME_M1": 1, "TIMEFRAME_M5": 5, "TIMEFRAME_M15": 15, "TIMEFRAME_M30": 30,
     "TIMEFRAME_H1": 16385, "TIMEFRAME_H4": 16388, "TIMEFRAME_D1": 16408,

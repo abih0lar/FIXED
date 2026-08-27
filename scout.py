@@ -307,9 +307,14 @@ class Scout:
         # 2b. TREND-STRENGTH FILTER (optional, MIN_ADX > 0): avoid chop. SMC setups
         # taken when the 4h trend is weak lose disproportionately; require a
         # minimum 4h ADX so we only trade real, tradeable trends.
+        # FIX: df_4h is raw OHLCV here — the 'adx' column never existed, so the
+        # old read always returned NaN and this gate could never fire (dead
+        # knob). Compute indicators on the 4h frame first, THEN read ADX.
+        # (Only computed when the filter is enabled — zero cost otherwise.)
         min_adx = BOT_CONFIG.dynamic.min_adx
         if min_adx > 0:
             try:
+                df_4h = self.data.compute_indicators(df_4h)
                 adx_val = float(df_4h.iloc[-1].get("adx", np.nan))
             except (TypeError, ValueError):
                 adx_val = float("nan")
